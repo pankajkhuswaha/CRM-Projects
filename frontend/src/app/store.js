@@ -1,0 +1,9 @@
+import { configureStore } from "@reduxjs/toolkit";
+import authSlice from "features/auth/authSlice";
+import loanSlice from "features/loan/loanSlice";
+export const store = configureStore({
+  reducer: {
+    users: authSlice,
+    individualloan:loanSlice,
+  },
+});

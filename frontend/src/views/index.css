@@ -1,0 +1,61 @@
+.trigeredbut{
+    margin:2px 24px;
+    position: relative;
+    top: -59px;
+}
+.filter{
+    margin:6px 40px 0px 16px
+}
+.filterloan{
+    display: flex;
+    flex-wrap: wrap;
+}
+.cols{
+    display: flex;
+    margin: 15px;
+}
+.button{
+    font-size: 12px;
+    padding: 8px 8px;
+    border-radius: 6px;
+    background-color: #5E72E4;
+    color: white;
+}
+.button:hover{
+    color: white;
+    
+}
+.registermain{
+    width: 100%;
+    position: relative;
+    top: -50px;
+}
+.form-control-file{
+    padding: 7px 0;
+}
+/* @media screen and (max-width:500px){
+.filterloan{
+    display: flex;
+    flex-direction: column;
+}
+} */
+
+@media screen and (max-width: 900px){
+.registermain{
+    width: 100%;
+    position: relative;
+ top: 20px;
+}
+}
+
+@media screen and (max-width: 500px){
+.registermain{
+    width: 100%;
+    position: relative;
+ top: 20px;
+}
+.trigeredbut{
+    margin: 2px;
+}
+
+}
