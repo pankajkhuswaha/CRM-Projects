@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // node.js library that concatenates classes (strings)
 import { FiFilter } from "react-icons/fi";
 import { MdCancel } from "react-icons/md";
@@ -26,6 +26,7 @@ import { chartOptions, parseOptions } from "variables/charts.js";
 
 import Header from "components/Headers/Header.js";
 import { ToastContainer } from "react-toastify";
+import axios from "axios";
 
 const Index = ({ direction, ...args }) => {
   const [activeNav, setActiveNav] = useState(1);
@@ -37,6 +38,16 @@ const Index = ({ direction, ...args }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const [customers, setCustomers] = useState([])
+  const fetchData = async () => {
+    const res = await axios.get("https://api.grfinancial.in/api/customer");
+    setCustomers(res.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(customers);
 
   return (
     <>
@@ -176,53 +187,23 @@ const Index = ({ direction, ...args }) => {
             <Table className="align-items-center table-flush" responsive>
               <thead className="thead-light">
                 <tr>
-                  <th scope="col">Page name</th>
-                  <th scope="col">Visitors</th>
-                  <th scope="col">Unique users</th>
-                  <th scope="col">Bounce rate</th>
+                  <th scope="col">Sr.No</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Customer name</th>
+                  <th scope="col">Mobile</th>
+                  <th scope="col">Loan Type</th>
+                  <th scope="col">Loan Amount</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">/argon/</th>
-                  <td>4,569</td>
-                  <td>340</td>
-                  <td>
-                    <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">/argon/index.html</th>
-                  <td>3,985</td>
-                  <td>319</td>
-                  <td>
-                    <i className="fas fa-arrow-down text-warning mr-3" /> 46,53%
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">/argon/charts.html</th>
-                  <td>3,513</td>
-                  <td>294</td>
-                  <td>
-                    <i className="fas fa-arrow-down text-warning mr-3" /> 36,49%
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">/argon/tables.html</th>
-                  <td>2,050</td>
-                  <td>147</td>
-                  <td>
-                    <i className="fas fa-arrow-up text-success mr-3" /> 50,87%
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">/argon/profile.html</th>
-                  <td>1,795</td>
-                  <td>190</td>
-                  <td>
-                    <i className="fas fa-arrow-down text-danger mr-3" /> 46,53%
-                  </td>
-                </tr>
+                {customers && customers.map((itm,i)=><tr key={i}>
+                  <th scope="row">{i+1}</th>
+                  <td>{itm.createdAt.split("T")[0]}</td>
+                  <td>{itm.persondetails[0]?.name}</td>
+                  <td>{itm.persondetails[0]?.mobile}</td>
+                  <td>{itm?.loantype?.join(" ")}</td>
+                  <td>{itm?.loanAmount}</td>
+                </tr>)}
               </tbody>
             </Table>
           </Card>

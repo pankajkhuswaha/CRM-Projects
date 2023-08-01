@@ -9,6 +9,7 @@ const initialState = {
       providentfund:"",
       cashInHand:""
     },
+    documents:{},
     document: [],
     reference: {},
   },
@@ -33,12 +34,16 @@ const loanSlice = createSlice({
       state.data.assetdetail.carDetails.push(action.payload)
     },
     addasset: (state, action) => {
-      state.data.assetdetail.providentfund = action.payload.providentfund
-      state.data.assetdetail.cashInHand = action.payload.cashInHand
+      state.data.assetdetail.providentfund = action.payload.profitentfund
+      state.data.assetdetail.cashInHand = action.payload.cashinhand
     },
+    addDocument: (state,action)=>{
+      console.log(action.payload)
+      state.data.documents =action.payload
+    }
   },
 });
-export const { addPerson, addReference, addLoanDetailindvidual, addPropertyindvidual,addcarindvidual,addasset } =
+export const { addPerson, addReference, addLoanDetailindvidual, addPropertyindvidual,addcarindvidual,addasset,addDocument } =
   loanSlice.actions;
 
 export default loanSlice.reducer;

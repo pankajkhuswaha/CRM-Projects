@@ -19,6 +19,7 @@ import {
 import { addPropertyindvidual,addcarindvidual } from "features/loan/loanSlice";
 import { toast } from "react-toastify";
 import { addasset } from "features/loan/loanSlice";
+import { useNavigate } from "react-router-dom";
 
 const Assetsdetails = ({ direction, ...args }) => {
   const [propertyOption, setPropertyOption] = useState("");
@@ -34,10 +35,10 @@ const Assetsdetails = ({ direction, ...args }) => {
   const previousproperty = useSelector(
     (st) => st.individualloan.data.assetdetail.propertyDetails
   );
-  console.log(previousproperty);
   const previouscar = useSelector(
     (st) => st.individualloan.data.assetdetail.carDetails
   );
+  console.log(useSelector((st) => st.individualloan.data))
   const [cardetails, setCardetails] = useState({
     carName: "",
     modelNumber: "",
@@ -50,12 +51,15 @@ const Assetsdetails = ({ direction, ...args }) => {
   const [profitentfund, setProfitantFund] = useState("");
 
   const [cashinhand, setCashinHand] = useState("");
+  const navigate = useNavigate()
 
   const handleAsset = (e) => {
     e.preventDefault();
     if(profitentfund , cashinhand){
       const data ={profitentfund , cashinhand}
+      console.log(data)
       dispatch(addasset(data))
+      navigate("/upload")
     }else{
       toast.warn("Please fill all the details to continue")
     }

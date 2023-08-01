@@ -4,12 +4,14 @@ const mongoose = require("mongoose");
 const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const app = express();
-const PORT = 8000;
+const PORT = 7002;
 const authRouter = require("./routes/authRoute");
 const assetRouter = require("./routes/assetRoute")
 const docRouter = require("./routes/documentRoute")
 const personRouter = require("./routes/personRoute")
-const loanRouter = require("./routes/loanroute")
+const loanRouter = require("./routes/loanroute");
+const imageRouter = require("./routes/imguploadroute");
+const customerRouter = require("./routes/customerRoute");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -26,6 +28,8 @@ app.use("/api/asset", assetRouter);
 app.use("/api/doc", docRouter);
 app.use("/api/person", personRouter);
 app.use("/api/loan", loanRouter);
+app.use("/api/upload", imageRouter);
+app.use("/api/customer", customerRouter);
 app.use(notFound);
 app.use(errorHandler);
 
