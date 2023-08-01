@@ -19,7 +19,6 @@ export const login = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
     try {
-      console.log(userData)
       return await authService.login(userData);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -42,7 +41,6 @@ export const registration = createAsyncThunk(
     try {
       return await authService.registration(user);
     } catch (error) {
-      console.log(error.message,"dsf")
       return thunkAPI.rejectWithValue(error);
     }
   }

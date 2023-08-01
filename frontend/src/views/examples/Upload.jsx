@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { addCompany, addUser } from "features/user/UserReducer";
+import React, {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "./index.css";
@@ -19,6 +18,7 @@ import { uploadDoc } from "utils/api";
 import { addDocument } from "features/loan/loanSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { addCustomer } from "utils/api";
 
 const Upload = ({ direction, ...args }) => {
   const dispatch = useDispatch();
@@ -38,27 +38,18 @@ const Upload = ({ direction, ...args }) => {
     salarySlip: "",
     form16: "",
   });
-  const data = useSelector((st) => st.individualloan.data);
+  const data = useSelector((st) => st.customer.data);
+  console.log(data)
   const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
     try {
-      const res = await axios.post(
-        "https://api.grfinancial.in/api/customer/add",
-        data
-      );
+      const res = await addCustomer(data)
       toast.success(res.data);
       navigate("/admin/index")
     } catch (error) {
       toast.error(error.message);
     }
-    // dispatch(
-    //   addUser({ aadharFile: formData.aadharFile, panFile: formData.panFile })
-    // );
-    // dispatch(addCompany({}));
-    // setFormData({}); // Reset form data
-    // setShowKYC(false);
   };
 
   const handleDocUpload = async (e, field) => {
@@ -182,12 +173,12 @@ const Upload = ({ direction, ...args }) => {
                   <span>
                     <i
                       style={{ margin: "0px 16px 0px 4px" }}
-                      class="fa-solid fa-file"
+                      className="fa-solid fa-file"
                     ></i>
                     KYC
                     <i
                       style={{ margin: "0px 0px 0px 34px", fontSize: "25px" }}
-                      class="fa-solid fa-down-left-and-up-right-to-center"
+                      className="fa-solid fa-down-left-and-up-right-to-center"
                     ></i>
                   </span>
                 </Button>
@@ -253,12 +244,12 @@ const Upload = ({ direction, ...args }) => {
                   <span>
                     <i
                       style={{ margin: "0px 16px 0px 4px" }}
-                      class="fa-solid fa-file"
+                      className="fa-solid fa-file"
                     ></i>
                     Financial Documents
                     <i
                       style={{ margin: "0px 0px 0px 34px", fontSize: "25px" }}
-                      class="fa-solid fa-down-left-and-up-right-to-center"
+                      className="fa-solid fa-down-left-and-up-right-to-center"
                     ></i>
                   </span>
                 </Button>
@@ -345,12 +336,12 @@ const Upload = ({ direction, ...args }) => {
                   <span>
                     <i
                       style={{ margin: "0px 16px 0px 4px" }}
-                      class="fa-solid fa-file"
+                      className="fa-solid fa-file"
                     ></i>
                     Other Documents
                     <i
                       style={{ margin: "0px 0px 0px 34px", fontSize: "25px" }}
-                      class="fa-solid fa-down-left-and-up-right-to-center"
+                      className="fa-solid fa-down-left-and-up-right-to-center"
                     ></i>
                   </span>
                 </Button>

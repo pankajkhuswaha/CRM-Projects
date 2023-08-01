@@ -52,7 +52,6 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
   console.log(findUser!==null)
   
   if(findUser!==null){
-    console.log(await findUser.isPasswordMatched(password));
     if (findUser && (await findUser.isPasswordMatched(password))) {
       const refreshToken = await generateRefreshToken(findUser?._id);
       if (findUser.isBlocked === false) {

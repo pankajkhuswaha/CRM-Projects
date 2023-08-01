@@ -20,6 +20,7 @@ import { addPropertyindvidual,addcarindvidual } from "features/loan/loanSlice";
 import { toast } from "react-toastify";
 import { addasset } from "features/loan/loanSlice";
 import { useNavigate } from "react-router-dom";
+import { uploadDoc } from "utils/api";
 
 const Assetsdetails = ({ direction, ...args }) => {
   const [propertyOption, setPropertyOption] = useState("");
@@ -33,17 +34,16 @@ const Assetsdetails = ({ direction, ...args }) => {
     propertyAddress: "",
   });
   const previousproperty = useSelector(
-    (st) => st.individualloan.data.assetdetail.propertyDetails
+    (st) => st.customer.data.assetdetail.propertyDetails
   );
   const previouscar = useSelector(
-    (st) => st.individualloan.data.assetdetail.carDetails
+    (st) => st.customer.data.assetdetail.carDetails
   );
-  console.log(useSelector((st) => st.individualloan.data))
   const [cardetails, setCardetails] = useState({
     carName: "",
     modelNumber: "",
     insuredBy: "",
-    policy: "",
+    cardetails: "",
     policyRenewalMonth: "",
   });
 
@@ -57,7 +57,6 @@ const Assetsdetails = ({ direction, ...args }) => {
     e.preventDefault();
     if(profitentfund , cashinhand){
       const data ={profitentfund , cashinhand}
-      console.log(data)
       dispatch(addasset(data))
       navigate("/upload")
     }else{
@@ -65,31 +64,42 @@ const Assetsdetails = ({ direction, ...args }) => {
     }
   };
 
-  const handleFileUpload = (files) => {
-    if (files && files.length > 0) {
-      const uploadedFile = files[0];
-      console.log("Uploaded file:", uploadedFile);
-      // Perform further processing with the uploaded file
+  const handleFileUpload =async (file) => {
+    let url = await uploadDoc(file);
+    setCardetails({ ...cardetails, cardetails: url });
+    if(url){
+      toast.success("Policy is uploaded Sucessfully")
     }
   };
   const addPropertyForm = () => {
-    console.log(propertyDetails);
     const { propertyName, propertyDetail, propertyType, propertyAddress } =
       propertyDetails;
     if ((propertyName, propertyDetail, propertyType, propertyAddress)) {
       dispatch(addPropertyindvidual(propertyDetails));
       toast.success("Property details is added Sucessfully");
+      setpropertyDetails({
+        propertyName: "",
+        propertyDetail: "",
+        propertyType: "",
+        propertyAddress: "",
+      })
     } else {
       toast.warn("Please fill all the details about Property");
     }
   };
 
   const addCarForm = () => {
-    console.log(cardetails);
     const { carName, modelNumber, insuredBy, policy, policyRenewalMonth } =
       cardetails;
     if ((carName, modelNumber, insuredBy, policy, policyRenewalMonth)) {
       dispatch(addcarindvidual(cardetails));
+      setCardetails({
+        carName: "",
+        modelNumber: "",
+        insuredBy: "",
+        cardetails: "",
+        policyRenewalMonth: "",
+      })
       toast.success("Car details is added Sucessfully");
     } else {
       toast.warn("Please fill all the details about Car");
@@ -400,7 +410,7 @@ const Assetsdetails = ({ direction, ...args }) => {
                             placeholder="Policy Upload "
                             type="file"
                             name="upload"
-                            onChange={(e) => handleFileUpload(e.target.files)}
+                            onChange={(e) => handleFileUpload(e.target.files[0])}
                           />
                         </InputGroup>
                       </FormGroup>

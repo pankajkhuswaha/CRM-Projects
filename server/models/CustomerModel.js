@@ -6,7 +6,11 @@ const CustomerModel = new mongoose.Schema(
       require: true,
       default: "admin",
     },
-    loanid: {
+    customertype: {
+      type: String,
+      require: true,
+    },
+    customerid: {
       type: String,
       require: true,
       unique: true,
@@ -48,6 +52,12 @@ const CustomerModel = new mongoose.Schema(
       type: Array,
     },
     propertydeatils: {
+      type: Array,
+    },
+    firm: {
+      type: Array,
+    },
+    company: {
       type: Array,
     },
     date: {

@@ -26,7 +26,6 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(logins);
     try {
       const res = await axios.post(`${base_url}user/login`, logins);
       if (res.data.name !== undefined) {

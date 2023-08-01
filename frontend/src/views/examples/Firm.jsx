@@ -1,12 +1,9 @@
-
-
-
 import React, { useState } from "react";
-import { addFirm, addUser } from "features/user/UserReducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -21,96 +18,94 @@ import {
   Col,
 } from "reactstrap";
 import { TbMapPinCode } from "react-icons/tb";
+// import { addPerson } from "features/loan/loanSlice";
+// import { addReference } from "features/loan/loanSlice";
+import { addPerson,addFirm,addloanType ,addReference} from "features/loan/loanSlice";
 
 const Firm = () => {
-  const notify = () =>
-    toast.success("User Succesfully Added!", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [address, setaddress] = useState("");
   const [city, setCity] = useState("");
-
   const [pincode, setPincode] = useState("");
-
   const [state, setState] = useState("");
-
   const [mobile, setMobile] = useState("");
-
   const [dob, setDob] = useState("");
-
   const [mother, setMother] = useState("");
-
   const [father, setFather] = useState("");
+  const [firstreferance, firstsetreferance] = useState("");
+  const [secondreference, setsecondreference] = useState("");
+  const [Firmdata, setFirmdata] = useState({
+    name: "",
+    type: "",
+    adress: "",
+  });
+  const previousp = useSelector((st) => st.customer.data.persondetails);
 
-  const [reference1, setReference1] = useState("");
-
-  const [reference2, setReference2] = useState("");
-  const [firm, setFirm] = useState("");
-
-  const [firmtype, setFirmtype] = useState("");
-
-  const [firmaddress, setFirmaddress] = useState("");
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const handlpersonData = () => {
+    const data = {
+      name,
+      email,
+      city,
+      address,
+      pincode,
+      state,
+      mobile,
+      dob,
+      mother,
+      father,
+    };
+    if (
+      (name, address, email, city, pincode, state, mobile, dob, mother, father)
+    ) {
+      dispatch(addPerson(data));
+      setName("");
+      setEmail("");
+      setaddress("");
+      setCity("");
+      setPincode("");
+      setState("");
+      setMobile("");
+      setDob("");
+      setMother("");
+      setFather("");
+    } else {
+      toast.error("Please fill all the details of user.");
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(
-      addUser({
-        name,
-        email,
-        city,
-        pincode,
-        state,
-        mobile,
-        dob,
-        mother,
-        father,
-        reference1,
-        reference2,
-      })
-    );
-
-    dispatch(
-      addFirm({
-        firm,
-        firmaddress,
-      firmtype
-      })
-    );
-
-    e.target.reset();
+    if (previousp.length === 0) {
+      toast.info("Plaese fill the user details first to continue!");
+    } else {
+      if ((firstreferance, secondreference)) {
+        const data = { firstreferance, secondreference };
+        dispatch(addReference(data));
+        if ((Firmdata.name, Firmdata.type, Firmdata.adress)) {
+          dispatch(addFirm(Firmdata));
+          dispatch(addloanType("Firm"))
+          navigate("/NextStep");
+        } else {
+          toast.warn("Please fill the firm Details !");
+        }
+      } else {
+        toast.warn("Please fill the reference name");
+      }
+    }
+    console.log(Firmdata);
   };
-  console.log(useSelector((st) => st.users));
+
   return (
     <div className="registermain">
       <Col lg="12" md="12">
         <Card className="bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <p style={{ color: "gray", fontSize: "20px" }}>
-                Create Firm
-              </p>
+              <p style={{ color: "gray", fontSize: "20px" }}> Firm</p>
             </div>
             <Form role="form" onSubmit={handleSubmit}>
               <Row>
@@ -126,6 +121,7 @@ const Firm = () => {
                         placeholder="Name"
                         type="text"
                         name="name"
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
                     </InputGroup>
@@ -142,6 +138,7 @@ const Firm = () => {
                       <Input
                         placeholder="Email"
                         type="email"
+                        value={email}
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
                       />
@@ -155,18 +152,39 @@ const Firm = () => {
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="fa-solid fa-house"></i>
+                          <i className="fa-solid fa-mobile"></i>{" "}
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="City"
+                        placeholder="Mobile Number"
                         type="text"
-                        name="city"
-                        onChange={(e) => setCity(e.target.value)}
+                        value={mobile}
+                        name="mobileNumber"
+                        onChange={(e) => setMobile(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-house"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Address"
+                        type="text"
+                        value={address}
+                        name="address"
+                        onChange={(e) => setaddress(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -177,9 +195,28 @@ const Firm = () => {
                       </InputGroupAddon>
                       <Input
                         placeholder="Pin Code"
+                        value={pincode}
                         type="text"
                         name="pinCode"
                         onChange={(e) => setPincode(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-house"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="City"
+                        value={city}
+                        type="text"
+                        name="city"
+                        onChange={(e) => setCity(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -197,31 +234,13 @@ const Firm = () => {
                       <Input
                         placeholder="State"
                         type="text"
+                        value={state}
                         name="state"
                         onChange={(e) => setState(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-                <Col md="6">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="fa-solid fa-mobile"></i>{" "}
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Mobile Number"
-                        type="text"
-                        name="mobileNumber"
-                        onChange={(e) => setMobile(e.target.value)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -234,11 +253,14 @@ const Firm = () => {
                         placeholder="DOB"
                         type="date"
                         name="dob"
+                        value={dob}
                         onChange={(e) => setDob(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
+              </Row>
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -250,14 +272,13 @@ const Firm = () => {
                       <Input
                         placeholder="Mother Name"
                         type="text"
+                        value={mother}
                         name="motherName"
                         onChange={(e) => setMother(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-              </Row>
-              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -269,30 +290,36 @@ const Firm = () => {
                       <Input
                         placeholder="Father Name"
                         type="text"
+                        value={father}
                         name="fatherName"
                         onChange={(e) => setFather(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-                <Col md="6">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="fa-solid fa-circle-user" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Reference1"
-                        type="text"
-                        name="reference1"
-                        onChange={(e) => setReference1(e.target.value)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
               </Row>
+              {previousp?.length !== 0 && (
+                <table className="table border mb-4">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Mobile</th>
+                      <th scope="col">Address</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previousp.map((row, i) => (
+                      <tr key={i}>
+                        <th scope="row">{i + 1}</th>
+                        <td>{row.name}</td>
+                        <td>{row.mobile}</td>
+                        <td>{row.address}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
               <Row>
                 <Col md="6">
                   <FormGroup>
@@ -303,10 +330,10 @@ const Firm = () => {
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Refernce-2"
+                        placeholder="First Reference Name"
                         type="text"
-                        name="reference2"
-                        onChange={(e) => setReference2(e.target.value)}
+                        name="firstreferance"
+                        onChange={(e) => firstsetreferance(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -316,34 +343,54 @@ const Firm = () => {
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i class="fa-regular fa-building"></i>{" "}
+                          <i className="fa-solid fa-circle-user" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="firm Name"
+                        placeholder="Second Reference Name"
                         type="text"
-                        name="firm"
-                        onChange={(e) => setFirm(e.target.value)}
+                        name="secondreference"
+                        onChange={(e) => setsecondreference(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-              </Row>
-              {/* ==================== */}
-              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i class="fa-solid fa-building"></i>
+                          <i className="fa-solid fa-circle-user" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Firm Type"
+                        placeholder="Firm Name"
                         type="text"
+                        name="firmname"
+                        value={Firmdata.name}
+                        onChange={(e) =>
+                          setFirmdata({ ...Firmdata, name: e.target.value })
+                        }
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-circle-user" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Firm type"
+                        type="text"
+                        value={Firmdata.type}
                         name="firmtype"
-                        onChange={(e) => setFirmtype(e.target.value)}
+                        onChange={(e) =>
+                          setFirmdata({ ...Firmdata, type: e.target.value })
+                        }
                       />
                     </InputGroup>
                   </FormGroup>
@@ -353,47 +400,35 @@ const Firm = () => {
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i class="fa-solid fa-building"></i>
+                          <i className="fa-solid fa-circle-user" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Firm Address"
+                        placeholder="Firm Adress"
                         type="text"
-                        name="firmaddress"
-                        onChange={(e) => setFirmaddress(e.target.value)}
+                        name="secondreference"
+                        value={Firmdata.adress}
+                        onChange={(e) =>
+                          setFirmdata({ ...Firmdata, adress: e.target.value })
+                        }
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
               </Row>
-              {/* ========== */}
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button
-                  onClick={notify}
+                  onClick={handlpersonData}
                   className="mt-4"
                   color="primary"
-                  type="submit"
                 >
                   Add More
                 </Button>
-                <Link to={"/NextStep"}>
-                  <Button className="mt-4" color="primary" type="submit">
-                    Next
-                  </Button>
-                </Link>
+                <Button className="mt-4" color="primary" type="submit">
+                  Next
+                </Button>
               </div>
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-              />
+              <ToastContainer />
             </Form>
           </CardBody>
         </Card>

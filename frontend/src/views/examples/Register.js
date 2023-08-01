@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { addUser } from "features/user/UserReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { ToastContainer, toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
@@ -21,6 +20,7 @@ import {
 import { TbMapPinCode } from "react-icons/tb";
 import { addPerson } from "features/loan/loanSlice";
 import { addReference } from "features/loan/loanSlice";
+import { addloanType } from "features/loan/loanSlice";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -38,8 +38,7 @@ const Register = () => {
   const [father, setFather] = useState("");
   const [firstreferance, firstsetreferance] = useState("");
   const [secondreference, setsecondreference] = useState("");
-  const previousp = useSelector((st) => st.individualloan.data.persondetails);
-  console.log(previousp);
+  const previousp = useSelector((st) => st.customer.data.persondetails);
 
   const handlpersonData = () => {
     const data = {
@@ -81,6 +80,7 @@ const Register = () => {
       if ((firstreferance, secondreference)) {
         const data = { firstreferance, secondreference };
         dispatch(addReference(data));
+        dispatch(addloanType("Individual"))
         navigate("/NextStep");
       } else {
         toast.warn("Please fill the reference name");

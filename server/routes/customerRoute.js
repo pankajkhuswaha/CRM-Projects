@@ -7,6 +7,6 @@ const {
 } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
-router.get("/", getCustomerData);
 router.post("/add", addCustomer);
+router.get("/", getCustomerData);
 module.exports = router;

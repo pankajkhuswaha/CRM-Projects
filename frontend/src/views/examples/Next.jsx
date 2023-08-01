@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { addCompany, addUser } from "features/user/UserReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import "./index.css";
-import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   ButtonDropdown,
@@ -24,21 +21,19 @@ import {
   Col,
 } from "reactstrap";
 import { addLoanDetailindvidual } from "features/loan/loanSlice";
+import { toast } from "react-toastify";
 
 const Next = ({ direction, ...args }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loanType, setSelectedLoans] = useState([]);
-
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loanAmount, setLoanAmount] = useState("");
   const [rateOfInterest, setrateOfInterest] = useState("");
   const [tennuretime, settennuretime] = useState("");
   const [dateOfDisburment, setdateOfDisburment] = useState("");
-  const previousp = useSelector((st) => st.individualloan.data.persondetails);
-
+  const previousp = useSelector((st) => st.customer.data.persondetails);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,11 +49,6 @@ const Next = ({ direction, ...args }) => {
       navigate("/admin")
       toast.error("error Occured")
     }
-    console.log(data)
-    // toast.success("dfsf")
-    // dispatch(addUser({}));
-    // dispatch(addCompany({}));
-    // e.target.reset();
   };
 
   const handleLoanSelection = (loanTypes) => {

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-// node.js library that concatenates classes (strings)
 import { FiFilter } from "react-icons/fi";
 import { MdCancel } from "react-icons/md";
+import { GrView } from "react-icons/gr";
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
-// javascipt plugin for creating charts
-import Chart from "chart.js";
 import "./index.css";
-
 import {
   Button,
   Card,
@@ -20,49 +18,29 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
-// core components
-import { chartOptions, parseOptions } from "variables/charts.js";
-
 import Header from "components/Headers/Header.js";
 import { ToastContainer } from "react-toastify";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getallCustomerData } from "features/loan/loanSlice";
 
 const Index = ({ direction, ...args }) => {
-  const [activeNav, setActiveNav] = useState(1);
   const [show, setShow] = useState(false);
-
-  if (window.Chart) {
-    parseOptions(Chart, chartOptions());
-  }
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const [customers, setCustomers] = useState([])
-  const fetchData = async () => {
-    const res = await axios.get("https://api.grfinancial.in/api/customer");
-    setCustomers(res.data);
-  };
+  const dispatch = useDispatch();
+  const intial = useSelector((st) => st.customer.customerdata);
+  const [customers, setCustomers] = useState([]);
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(getallCustomerData());
+  }, [dispatch]);
 
-  console.log(customers);
+  useEffect(() => {
+    setCustomers(intial);
+  }, [intial]);
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <ToastContainer />
       <Header />
       {/* filter  */}
       <div className="trigeredbut">
@@ -172,16 +150,6 @@ const Index = ({ direction, ...args }) => {
                 <div className="col">
                   <h3 className="mb-0">Recent Users</h3>
                 </div>
-                <div className="col text-right">
-                  <Button
-                    color="primary"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                  >
-                    See all
-                  </Button>
-                </div>
               </Row>
             </CardHeader>
             <Table className="align-items-center table-flush" responsive>
@@ -189,21 +157,34 @@ const Index = ({ direction, ...args }) => {
                 <tr>
                   <th scope="col">Sr.No</th>
                   <th scope="col">Date</th>
+                  <th scope="col">Customer Type</th>
                   <th scope="col">Customer name</th>
                   <th scope="col">Mobile</th>
                   <th scope="col">Loan Type</th>
                   <th scope="col">Loan Amount</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {customers && customers.map((itm,i)=><tr key={i}>
-                  <th scope="row">{i+1}</th>
-                  <td>{itm.createdAt.split("T")[0]}</td>
-                  <td>{itm.persondetails[0]?.name}</td>
-                  <td>{itm.persondetails[0]?.mobile}</td>
-                  <td>{itm?.loantype?.join(" ")}</td>
-                  <td>{itm?.loanAmount}</td>
-                </tr>)}
+                {customers &&
+                  customers?.map((itm, i) => (
+                    <tr key={i}>
+                      <th scope="row">{i + 1}</th>
+                      <td>{itm.createdAt.split("T")[0]}</td>
+                      <td>{itm.customertype}</td>
+                      <td>{itm.persondetails[0]?.name}</td>
+                      <td>{itm.persondetails[0]?.mobile}</td>
+                      <td>{itm?.loantype?.join(" ")}</td>
+                      <td>{itm?.loanAmount}</td>
+                      <td>
+                       <div className="d-flex gap-4">
+                       <AiFillEdit fontSize={22} color="green" />
+                        <AiFillDelete fontSize={22} color="red" />
+                        <GrView fontSize={22} color="skyblue" />
+                       </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </Card>

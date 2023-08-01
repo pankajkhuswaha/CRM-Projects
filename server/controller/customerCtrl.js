@@ -4,6 +4,9 @@ const addCustomer = asyncHandle(async (req, res) => {
   console.log(req.body);
   const cus = await Customer.find()
   const data = {
+    customertype : req.body.loantype,
+    customerid:`GRFinancial00${cus?.length+1 || 1}`,
+    customeremobile:"",
     persondetails: req.body.persondetails,
     ref1: req.body.reference.firstreferance,
     ref2: req.body.reference.secondreference,
@@ -17,7 +20,8 @@ const addCustomer = asyncHandle(async (req, res) => {
     cardetails: req.body.assetdetail.carDetails,
     propertydeatils: req.body.assetdetail.propertyDetails,
     documents: req.body.documents,
-    loanid:`GRFinancial00${cus?.length+1 || 1}`
+    firm:req.body?.firm,
+    company:req.body?.company
   };
   try {
     const newCustomer = await Customer.create(data)

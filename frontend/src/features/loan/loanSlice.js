@@ -1,6 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAllCustomer } from "utils/api";
+
+export const getallCustomerData = createAsyncThunk(
+    "customer/get-customer",
+    async (thunkAPI) => {
+      try {
+        return await getAllCustomer();
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+  
 const initialState = {
   data: {
+    loantype:"",
     persondetails: [],
     loandetails: "",
     assetdetail: {
@@ -12,7 +26,10 @@ const initialState = {
     documents:{},
     document: [],
     reference: {},
+    firm:{},
+    company:{}
   },
+  customerdata:[]
 };
 const loanSlice = createSlice({
   name: "users",
@@ -38,12 +55,39 @@ const loanSlice = createSlice({
       state.data.assetdetail.cashInHand = action.payload.cashinhand
     },
     addDocument: (state,action)=>{
-      console.log(action.payload)
       state.data.documents =action.payload
+    },
+    addFirm:(state,action)=>{
+      state.data.firm = action.payload
+    },
+    addCompany:(state,action)=>{
+      state.data.company = action.payload
+    },
+    addloanType:(state,action)=>{
+      state.data.loantype = action.payload
     }
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getallCustomerData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getallCustomerData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.customerdata = action.payload;
+      })
+      .addCase(getallCustomerData.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      
+  },
 });
-export const { addPerson, addReference, addLoanDetailindvidual, addPropertyindvidual,addcarindvidual,addasset,addDocument } =
+export const { addFirm,addPerson,addCompany, addReference, addLoanDetailindvidual, addPropertyindvidual,addcarindvidual,addasset,addDocument,addloanType } =
   loanSlice.actions;
 
 export default loanSlice.reducer;

@@ -216,7 +216,7 @@ const Sidebar = (props) => {
             </NavItem>
             <NavItem>
               <NavLink href="">
-                <i class="fa-solid fa-briefcase"></i>
+                <i className="fa-solid fa-briefcase"></i>
                 Business Loan
               </NavLink>
             </NavItem>
@@ -228,7 +228,7 @@ const Sidebar = (props) => {
             </NavItem>
             <NavItem>
               <NavLink href="">
-                <i class="fa-solid fa-house-chimney" /> Home Loan
+                <i className="fa-solid fa-house-chimney" /> Home Loan
               </NavLink>
             </NavItem>
             <NavItem>

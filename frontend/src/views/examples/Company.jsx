@@ -1,10 +1,9 @@
-
-
 import React, { useState } from "react";
-import { addCompany ,addUser} from "features/user/UserReducer";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { addUser } from "features/user/UserReducer";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
@@ -20,103 +19,95 @@ import {
   Col,
 } from "reactstrap";
 import { TbMapPinCode } from "react-icons/tb";
+import { addPerson } from "features/loan/loanSlice";
+import { addReference } from "features/loan/loanSlice";
+import { addCompany } from "features/loan/loanSlice";
+import { addloanType } from "features/loan/loanSlice";
 
 const Company = () => {
-   const notify = () =>
-     toast.success("User Succesfully Added!", {
-       position: "top-center",
-       autoClose: 5000,
-       hideProgressBar: false,
-       closeOnClick: true,
-       pauseOnHover: true,
-       draggable: true,
-       progress: undefined,
-       theme: "light",
-     });
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [address, setaddress] = useState("");
   const [city, setCity] = useState("");
-
   const [pincode, setPincode] = useState("");
-
   const [state, setState] = useState("");
-
   const [mobile, setMobile] = useState("");
-
   const [dob, setDob] = useState("");
-
   const [mother, setMother] = useState("");
-
   const [father, setFather] = useState("");
+  const [firstreferance, firstsetreferance] = useState("");
+  const [secondreference, setsecondreference] = useState("");
+  const [companydata, setcompanydata] = useState({
+    name: "",
+    type: "",
+    adress: "",
+  });
+  const previousp = useSelector((st) => st.customer.data.persondetails);
 
-
-
-  const [reference1, setReference1] = useState("");
-
-  const [reference2, setReference2] = useState("");
-    const [company, setCompany] = useState("");
-
-    const [companytype, setCompanytype] = useState("");
-
-    const [companyaddress, setCompanyadress] = useState("");
-
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const handlpersonData = () => {
+    const data = {
+      name,
+      email,
+      city,
+      address,
+      pincode,
+      state,
+      mobile,
+      dob,
+      mother,
+      father,
+    };
+    if (
+      (name, address, email, city, pincode, state, mobile, dob, mother, father)
+    ) {
+      dispatch(addPerson(data));
+      setName("");
+      setEmail("");
+      setaddress("");
+      setCity("");
+      setPincode("");
+      setState("");
+      setMobile("");
+      setDob("");
+      setMother("");
+      setFather("");
+    } else {
+      toast.error("Please fill all the details of user.");
+    }
   };
 
-
-  
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(
-      addUser({
-        name,
-        email,
-        city,
-        pincode,
-        state,
-        mobile,
-        dob,
-        mother,
-        father,
-        reference1,
-        reference2,
-      
-      })
-    );
-    
-    dispatch(
-      addCompany({
-      
-        companytype,
-        company,
-        companyaddress,
-      })
-    );
-
-    e.target.reset();
+    if (previousp.length === 0) {
+      toast.info("Plaese fill the user details first to continue!");
+    } else {
+      if ((firstreferance, secondreference)) {
+        const data = { firstreferance, secondreference };
+        dispatch(addReference(data));
+        if ((companydata.name, companydata.type, companydata.adress)) {
+          dispatch(addCompany(companydata));
+          dispatch(addloanType("Company"))
+          navigate("/NextStep");
+        } else {
+          toast.warn("Please fill the company Details !");
+        }
+      } else {
+        toast.warn("Please fill the reference name");
+      }
+    }
+    console.log(companydata);
   };
-console.log(useSelector((st) => st.users));
+
   return (
     <div className="registermain">
       <Col lg="12" md="12">
         <Card className="bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <p style={{ color: "gray", fontSize: "20px" }}>
-                Create Company
-              </p>
+              <p style={{ color: "gray", fontSize: "20px" }}> Company</p>
             </div>
             <Form role="form" onSubmit={handleSubmit}>
               <Row>
@@ -132,6 +123,7 @@ console.log(useSelector((st) => st.users));
                         placeholder="Name"
                         type="text"
                         name="name"
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
                     </InputGroup>
@@ -148,6 +140,7 @@ console.log(useSelector((st) => st.users));
                       <Input
                         placeholder="Email"
                         type="email"
+                        value={email}
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
                       />
@@ -161,18 +154,39 @@ console.log(useSelector((st) => st.users));
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="fa-solid fa-house"></i>
+                          <i className="fa-solid fa-mobile"></i>{" "}
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="City"
+                        placeholder="Mobile Number"
                         type="text"
-                        name="city"
-                        onChange={(e) => setCity(e.target.value)}
+                        value={mobile}
+                        name="mobileNumber"
+                        onChange={(e) => setMobile(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-house"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Address"
+                        type="text"
+                        value={address}
+                        name="address"
+                        onChange={(e) => setaddress(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -183,9 +197,28 @@ console.log(useSelector((st) => st.users));
                       </InputGroupAddon>
                       <Input
                         placeholder="Pin Code"
+                        value={pincode}
                         type="text"
                         name="pinCode"
                         onChange={(e) => setPincode(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-house"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="City"
+                        value={city}
+                        type="text"
+                        name="city"
+                        onChange={(e) => setCity(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -203,31 +236,13 @@ console.log(useSelector((st) => st.users));
                       <Input
                         placeholder="State"
                         type="text"
+                        value={state}
                         name="state"
                         onChange={(e) => setState(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-                <Col md="6">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="fa-solid fa-mobile"></i>{" "}
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Mobile Number"
-                        type="text"
-                        name="mobileNumber"
-                        onChange={(e) => setMobile(e.target.value)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -240,11 +255,14 @@ console.log(useSelector((st) => st.users));
                         placeholder="DOB"
                         type="date"
                         name="dob"
+                        value={dob}
                         onChange={(e) => setDob(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
+              </Row>
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -256,14 +274,13 @@ console.log(useSelector((st) => st.users));
                       <Input
                         placeholder="Mother Name"
                         type="text"
+                        value={mother}
                         name="motherName"
                         onChange={(e) => setMother(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-              </Row>
-              <Row>
                 <Col md="6">
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
@@ -275,30 +292,36 @@ console.log(useSelector((st) => st.users));
                       <Input
                         placeholder="Father Name"
                         type="text"
+                        value={father}
                         name="fatherName"
                         onChange={(e) => setFather(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
-                <Col md="6">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="fa-solid fa-circle-user" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Reference1"
-                        type="text"
-                        name="reference1"
-                        onChange={(e) => setReference1(e.target.value)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
               </Row>
+              {previousp?.length !== 0 && (
+                <table className="table border mb-4">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Mobile</th>
+                      <th scope="col">Address</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previousp.map((row, i) => (
+                      <tr key={i}>
+                        <th scope="row">{i + 1}</th>
+                        <td>{row.name}</td>
+                        <td>{row.mobile}</td>
+                        <td>{row.address}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
               <Row>
                 <Col md="6">
                   <FormGroup>
@@ -309,10 +332,10 @@ console.log(useSelector((st) => st.users));
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Refernce-2"
+                        placeholder="First Reference Name"
                         type="text"
-                        name="reference2"
-                        onChange={(e) => setReference2(e.target.value)}
+                        name="firstreferance"
+                        onChange={(e) => firstsetreferance(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -322,34 +345,34 @@ console.log(useSelector((st) => st.users));
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i class="fa-regular fa-building"></i>{" "}
+                          <i className="fa-solid fa-circle-user" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Second Reference Name"
+                        type="text"
+                        name="secondreference"
+                        onChange={(e) => setsecondreference(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-circle-user" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
                         placeholder="Company Name"
                         type="text"
-                        name="company"
-                        onChange={(e) => setCompany(e.target.value)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-              </Row>
-              {/* ==================== */}
-              <Row>
-                <Col md="6">
-                  <FormGroup>
-                    <InputGroup className="input-group-alternative mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i class="fa-solid fa-building"></i>
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Company Type"
-                        type="text"
-                        name="companytype"
-                        onChange={(e) => setCompanytype(e.target.value)}
+                        name="firmname"
+                        value={companydata.name}
+                        onChange={(e) =>
+                          setcompanydata({ ...companydata, name: e.target.value })
+                        }
                       />
                     </InputGroup>
                   </FormGroup>
@@ -359,47 +382,55 @@ console.log(useSelector((st) => st.users));
                     <InputGroup className="input-group-alternative mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i class="fa-solid fa-building"></i>
+                          <i className="fa-solid fa-circle-user" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Company Address"
+                        placeholder="Company type"
                         type="text"
-                        name="companyaddress"
-                        onChange={(e) => setCompanyadress(e.target.value)}
+                        value={companydata.type}
+                        name="firmtype"
+                        onChange={(e) =>
+                          setcompanydata({ ...companydata, type: e.target.value })
+                        }
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa-solid fa-circle-user" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Company Adress"
+                        type="text"
+                        name="secondreference"
+                        value={companydata.adress}
+                        onChange={(e) =>
+                          setcompanydata({ ...companydata, adress: e.target.value })
+                        }
                       />
                     </InputGroup>
                   </FormGroup>
                 </Col>
               </Row>
-              {/* ========== */}
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button
-                  onClick={notify}
+                  onClick={handlpersonData}
                   className="mt-4"
                   color="primary"
-                  type="submit"
                 >
                   Add More
                 </Button>
-                <Link to={"/NextStep"}>
-                  <Button className="mt-4" color="primary" type="submit">
-                    Next
-                  </Button>
-                </Link>
+                <Button className="mt-4" color="primary" type="submit">
+                  Next
+                </Button>
               </div>
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-              />
+              <ToastContainer />
             </Form>
           </CardBody>
         </Card>

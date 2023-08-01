@@ -10,7 +10,6 @@ import {
 
 const AdminNavbar = () => {
   const atLogin = useLocation().pathname.includes('login')
-  console.log(atLogin)
   return (
     <>
       <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">     

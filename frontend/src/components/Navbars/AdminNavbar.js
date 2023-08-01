@@ -42,7 +42,7 @@ const AdminNavbar = (props) => {
               </InputGroup>
             </FormGroup>
           </Form>
-          <div style={{margin:'10px'}}>
+          <div className="d-none d-md-block" style={{margin:'10px'}}>
             <BsFillBellFill color="white" fontSize={25} />
           </div>
 
