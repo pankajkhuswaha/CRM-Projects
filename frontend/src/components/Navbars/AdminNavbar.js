@@ -1,12 +1,10 @@
-
 import { Link } from "react-router-dom";
 // reactstrap components
-import {BsFillBellFill} from 'react-icons/bs'
+import { BsFillBellFill } from "react-icons/bs";
 import {
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-
   Form,
   FormGroup,
   InputGroupAddon,
@@ -18,8 +16,19 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSearch } from "features/loan/loanSlice";
 
 const AdminNavbar = (props) => {
+  const intial = useSelector((st) => st.customer.customerdata);
+  const dispatch = useDispatch()
+  const handleSearch = (e) => {
+    const filt = intial.filter((item) => {
+      return item.persondetails.some((person) => person.mobile.includes(e.target.value));
+    });
+    dispatch(toggleSearch(filt));
+  };
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -37,12 +46,12 @@ const AdminNavbar = (props) => {
                   <InputGroupText>
                     <i className="fas fa-search" />
                   </InputGroupText>
-                </InputGroupAddon>
-                <Input placeholder="Search" type="text" />
+                </InputGroupAddon>                
+                <Input placeholder="Search" type="number" onChange={handleSearch}/>
               </InputGroup>
             </FormGroup>
           </Form>
-          <div className="d-none d-md-block" style={{margin:'10px'}}>
+          <div className="d-none d-md-block" style={{ margin: "10px" }}>
             <BsFillBellFill color="white" fontSize={25} />
           </div>
 

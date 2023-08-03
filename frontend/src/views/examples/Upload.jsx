@@ -39,7 +39,7 @@ const Upload = ({ direction, ...args }) => {
     form16: "",
   });
   const data = useSelector((st) => st.customer.data);
-  console.log(data)
+  // console.log(data)
   const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();

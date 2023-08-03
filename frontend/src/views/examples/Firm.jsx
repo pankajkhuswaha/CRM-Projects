@@ -96,7 +96,7 @@ const Firm = () => {
         toast.warn("Please fill the reference name");
       }
     }
-    console.log(Firmdata);
+    // console.log(Firmdata);
   };
 
   return (

@@ -3,7 +3,7 @@ import { FiFilter } from "react-icons/fi";
 import { MdCancel } from "react-icons/md";
 import { GrView } from "react-icons/gr";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./index.css";
 import {
   Button,
@@ -19,17 +19,22 @@ import {
   Col,
 } from "reactstrap";
 import Header from "components/Headers/Header.js";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getallCustomerData } from "features/loan/loanSlice";
+import { addviewCustomer } from "features/loan/customer";
+import { deleteCustomer } from "utils/api";
 
 const Index = ({ direction, ...args }) => {
   const [show, setShow] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const intial = useSelector((st) => st.customer.customerdata);
   const [customers, setCustomers] = useState([]);
+  const filters = useSelector((st) => st.customer.filterdata);
+  const searchs = useSelector((st) => st.customer.filterdata);
   useEffect(() => {
     dispatch(getallCustomerData());
   }, [dispatch]);
@@ -37,6 +42,36 @@ const Index = ({ direction, ...args }) => {
   useEffect(() => {
     setCustomers(intial);
   }, [intial]);
+
+  useEffect(() => {
+    if (typeof filters === "string") {
+      setCustomers(intial);
+    } else {
+      setCustomers(filters);
+    }
+  }, [filters, intial]);
+
+  useEffect(() => {
+    if (typeof searchs === "string") {
+      setCustomers(intial);
+    } else {
+      setCustomers(searchs);
+    }
+  }, [searchs, intial]);
+  const handleView = async(itm)=>{
+    dispatch(addviewCustomer(itm))
+    navigate("/admin/view")
+  }
+  const handleDelete = async(itm)=>{
+    console.log(itm)
+    const _id =itm._id
+    try {
+      const res = await deleteCustomer({_id})
+      toast.success(res)
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   return (
     <>
@@ -155,13 +190,23 @@ const Index = ({ direction, ...args }) => {
             <Table className="align-items-center table-flush" responsive>
               <thead className="thead-light">
                 <tr>
-                  <th scope="col">Sr.No</th>
+                  <th scope="col" style={{ maxWidth: "45px" }}>
+                    Sr.No
+                  </th>
                   <th scope="col">Date</th>
-                  <th scope="col">Customer Type</th>
+                  <th scope="col" style={{ maxWidth: "120px" }}>
+                    Customer Type
+                  </th>
                   <th scope="col">Customer name</th>
-                  <th scope="col">Mobile</th>
-                  <th scope="col">Loan Type</th>
-                  <th scope="col">Loan Amount</th>
+                  <th scope="col" style={{ maxWidth: "90px" }}>
+                    Mobile
+                  </th>
+                  <th scope="col" style={{ maxWidth: "90px" }}>
+                    Loan Type
+                  </th>
+                  <th scope="col" style={{ maxWidth: "90px" }}>
+                    Loan Amount
+                  </th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -169,7 +214,9 @@ const Index = ({ direction, ...args }) => {
                 {customers &&
                   customers?.map((itm, i) => (
                     <tr key={i}>
-                      <th scope="row">{i + 1}</th>
+                      <th scope="row" style={{ maxWidth: "45px" }}>
+                        {i + 1}
+                      </th>
                       <td>{itm.createdAt.split("T")[0]}</td>
                       <td>{itm.customertype}</td>
                       <td>{itm.persondetails[0]?.name}</td>
@@ -177,11 +224,25 @@ const Index = ({ direction, ...args }) => {
                       <td>{itm?.loantype?.join(" ")}</td>
                       <td>{itm?.loanAmount}</td>
                       <td>
-                       <div className="d-flex gap-4">
-                       <AiFillEdit fontSize={22} color="green" />
-                        <AiFillDelete fontSize={22} color="red" />
-                        <GrView fontSize={22} color="skyblue" />
-                       </div>
+                        <div style={{ display: "flex", gap: "12px" }}>
+                          <AiFillEdit
+                            fontSize={22}
+                            color="green"
+                            style={{ cursor: "pointer" }}
+                          />
+                          <AiFillDelete
+                            fontSize={22}
+                            color="red"
+                            onClick={()=>handleDelete(itm)}
+                            style={{ cursor: "pointer" }}
+                          />
+                          <GrView
+                            fontSize={22}
+                            color="skyblue"
+                            onClick={()=>handleView(itm)}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

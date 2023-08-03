@@ -1,5 +1,5 @@
 const express = require("express");
-const {  addCustomer, getCustomerData } = require("../controller/customerCtrl");
+const {  addCustomer, getCustomerData,deleteCustomerData } = require("../controller/customerCtrl");
 const {
   authMiddleware,
   isAdmin,
@@ -9,4 +9,5 @@ const {
 const router = express.Router();
 router.post("/add", addCustomer);
 router.get("/", getCustomerData);
+router.delete("/",authMiddleware, deleteCustomerData);
 module.exports = router;

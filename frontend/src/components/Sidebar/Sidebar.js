@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
-import './index.css'
+import "./index.css";
 // reactstrap components
 import {
   Button,
@@ -34,6 +33,8 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFilter } from "features/loan/loanSlice";
 
 var ps;
 
@@ -82,6 +83,13 @@ const Sidebar = (props) => {
       target: "_blank",
     };
   }
+  const dispatch = useDispatch();
+  const customer = useSelector((st) => st.customer.customerdata);
+  const handlefilter = (type) => {
+
+    const filt = customer.filter((ct) => ct.loantype.join().includes(type));   
+    dispatch(toggleFilter(filt));
+  };
 
   return (
     <Navbar
@@ -209,33 +217,53 @@ const Sidebar = (props) => {
           {/* Navigation */}
           <Nav className="mb-md-3" navbar>
             <NavItem>
-              <NavLink href="">
+              <div
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => handlefilter("PL")}
+              >
                 <i className="ni ni-spaceship" />
                 Personal Loan
-              </NavLink>
+              </div>
             </NavItem>
             <NavItem>
-              <NavLink href="">
+              <div
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => handlefilter("BL")}
+              >
                 <i className="fa-solid fa-briefcase"></i>
                 Business Loan
-              </NavLink>
+              </div>
             </NavItem>
             <NavItem>
-              <NavLink href="">
+              <div
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => handlefilter("LAP")}
+              >
                 <i className="ni ni-ui-04" />
                 Loan Against Property
-              </NavLink>
+              </div>
             </NavItem>
             <NavItem>
-              <NavLink href="">
+              <div
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => handlefilter("HL")}
+              >
                 <i className="fa-solid fa-house-chimney" /> Home Loan
-              </NavLink>
+              </div>
             </NavItem>
             <NavItem>
-              <NavLink href="">
+              <div
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => handlefilter("AL")}
+              >
                 <i className="ni ni-palette" />
                 Auto Loan
-              </NavLink>
+              </div>
             </NavItem>
           </Nav>
         </Collapse>

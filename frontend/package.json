@@ -4,7 +4,7 @@
   "description": "This is crm created and crafted deepnap softech",
   "main": "index.js",
   "author": "Pankaj Kumar",
-  "license": "MIT",  
+  "license": "MIT",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -31,6 +31,7 @@
     "bootstrap": "4.6.2",
     "chart.js": "2.9.4",
     "classnames": "2.3.2",
+    "firebase": "^10.1.0",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
     "react": ">=16.0.0",

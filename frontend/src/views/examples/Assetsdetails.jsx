@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { addCompany, addUser } from "features/user/UserReducer";
 import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
 import {

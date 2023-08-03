@@ -42,9 +42,9 @@ const isSuper = asyncHandler(async (req, res, next) => {
   const adminUser = await User.findOne({ email });
   if (adminUser.super===true) {
     req.user =req.user;
-    next();
+    next(); 
   } else {
-    throw new Error("You are not Super admin");
+   res.json("You are not Super admin");
     
   }
 });
